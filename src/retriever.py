@@ -1,12 +1,11 @@
-import os
 import json
-import faiss
 from pathlib import Path
+import faiss
+import numpy as np
 from whoosh.index import open_dir
 from whoosh.qparser import QueryParser
 from whoosh import scoring
-from sentence_transformers import SentenceTransformer
-import numpy as np
+from sentence_transformers import SentenceTransformer, CrossEncoder
 
 # Paths
 ROOT = Path(__file__).parent.parent
@@ -14,28 +13,29 @@ BM25_INDEX_DIR = ROOT / "index" / "bm25_index"
 FAISS_INDEX_DIR = ROOT / "index" / "faiss_index"
 CHUNKS_FILE = ROOT / "data" / "processed_chunks" / "chunks.json"
 
-# Load FAISS index and IDs
-faiss_index = faiss.read_index(str(FAISS_INDEX_DIR / "index.faiss"))
-with open(FAISS_INDEX_DIR / "ids.json", 'r', encoding='utf-8') as f:
-    faiss_ids = json.load(f)
-
-# Load chunk metadata
-with open(CHUNKS_FILE, 'r', encoding='utf-8') as f:
-    chunk_data = {chunk['id']: chunk for chunk in json.load(f)}
-
-# Load BM25 index
+# Load BM25
 bm25_ix = open_dir(str(BM25_INDEX_DIR))
 bm25_searcher = bm25_ix.searcher(weighting=scoring.BM25F())
 bm25_parser = QueryParser("content", bm25_ix.schema)
 
-# Embedding model
+# Load FAISS
+faiss_index = faiss.read_index(str(FAISS_INDEX_DIR / "index.faiss"))
+with open(FAISS_INDEX_DIR / "ids.json", 'r', encoding='utf-8') as f:
+    faiss_ids = json.load(f)
+
+# Load chunks metadata
+with open(CHUNKS_FILE, 'r', encoding='utf-8') as f:
+    chunk_data = {chunk['id']: chunk for chunk in json.load(f)}
+
+# Embedding & reranker models
 embed_model = SentenceTransformer("all-MiniLM-L6-v2")
+reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
 
-def retrieve(query: str, top_k: int = 5, alpha: float = 0.5):
+def retrieve(query: str, top_k: int = 5, alpha: float = 0.7):
     """
-    Retrieve top_k chunks combining BM25 and FAISS, then apply filename boosts.
+    Retrieve top_k chunks using BM25+FAISS fusion, heuristic boosts,
+    and cross-encoder reranking.
     """
-
     # 1) BM25 search
     q = bm25_parser.parse(query)
     bm25_results = bm25_searcher.search(q, limit=top_k)
@@ -52,33 +52,46 @@ def retrieve(query: str, top_k: int = 5, alpha: float = 0.5):
         combined[cid] = combined.get(cid, 0) + (1 - alpha) * score
     for cid, score in dense_scores.items():
         combined[cid] = combined.get(cid, 0) + alpha * score
-    
-    # Heuristic filename boost for tutorial and code‐example pages
+
+    # 4) Heuristic filename boost
     for cid in list(combined.keys()):
         src = chunk_data[cid]['source_file'].lower()
-        # boost if the file name suggests it contains usage or code examples
-        if any(keyword in src for keyword in (
-                "tokenizer", "quickstart", "getting_started",
-                "quicktour", "tutorial", "usage", "installation")):
+        if any(k in src for k in ("tokenizer", "quickstart", "getting_started",
+                                   "quicktour", "tutorial", "usage", "installation")):
             combined[cid] += 2.0
 
-    # 4) Heuristic boost for key filenames
-    for cid in list(combined.keys()):
-        src = chunk_data[cid]['source_file'].lower()
-        if any(k in src for k in ("tokenizer", "quickstart", "getting_started", "usage", "installation")):
-            combined[cid] += 2.0
-    
-    for cid in list(combined.keys()):
-        content = chunk_data[cid]['content']
-        if "```python" in content:
-            combined[cid] += 1.0
+    # 5) Heuristic code‐block boost
+        for cid in list(combined.keys()):
+            if "```" in chunk_data[cid]['content']:
+                combined[cid] += 1.0
 
-    # 5) Final sort and slice
-    sorted_ids = sorted(combined.items(), key=lambda x: x[1], reverse=True)[:top_k]
+    # 6) Preliminary top_N for reranking
+    top_N = min(len(combined), 20)
+    # prelim is a list of (cid, combined_score)
+    prelim = sorted(combined.items(), key=lambda x: x[1], reverse=True)[:top_N]
 
-    # 6) Build results list from sorted_ids
+    # 7) Cross‐encoder rerank
+    rerank_inputs = []
+    for item in prelim:
+        cid = item[0]                 # first element is chunk ID
+        text = chunk_data[cid]['content']
+        rerank_inputs.append((query, text))
+    rerank_scores = reranker.predict(rerank_inputs)
+    final = [(cid, rr_score) for (cid, _), rr_score in zip(prelim, rerank_scores)]
+
+    # 8) Final top_k selection
+    final = []
+    for idx, item in enumerate(prelim):
+        cid = item[0]
+        score = rerank_scores[idx]   # aligned by index
+        final.append((cid, score))
+
+    # 9) Build results
+    top_final = sorted(final, key=lambda x: x[1], reverse=True)[:top_k]
+
+    # 10) Build results
     results = []
-    for cid, score in sorted_ids:
+    for cid, score in top_final:
         chunk = chunk_data[cid]
         results.append({
             'id': cid,
@@ -86,15 +99,4 @@ def retrieve(query: str, top_k: int = 5, alpha: float = 0.5):
             'content': chunk['content'],
             'score': score
         })
-
     return results
-
-
-# For testing
-if __name__ == "__main__":
-    for query in ["transformer attention", "tokenizer hugging face"]:
-        print(f"\nQuery: {query}")
-        for r in retrieve(query, top_k=3, alpha=0.5):
-            print(f"\n- ID: {r['id']}, Score: {r['score']:.4f}")
-            print(f"  Source: {r['source_file']}")
-            print(f"  Preview: {r['content'][:150]}...")
