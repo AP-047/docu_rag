@@ -8,6 +8,8 @@ A local, CPU-friendly Retrieval-Augmented Generation (RAG) system for Hugging Fa
 1. Clone the repo
 ```
 git clone https://github.com/AP-047/docu_rag.git
+```
+```
 cd docu_rag
 ```
 
