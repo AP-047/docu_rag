@@ -16,7 +16,7 @@ pip install -r requirements.txt
 ```
 
 #### 3. Build or download llama.cpp
-- option 1: Build from source (CPU only):
+- Option_1: Build from source (CPU only):
 ```
 cd llama.cpp
 mkdir build && cd build
@@ -25,7 +25,7 @@ cmake --build . --config Release
 ```
 Copy the resulting llama-cli.exe into a convenient folder.
 
-- option 2: Download a Windows prebuilt binary from
+- Option_2: Download a Windows prebuilt binary from
 https://github.com/ggerganov/llama.cpp/releases
 (If you are using already downloaded one here in this repo then just adjust the path at "LLAMA_CPP_BIN =" in generator.py)
 
