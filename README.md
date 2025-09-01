@@ -63,19 +63,25 @@ and click Generate Answer.
 <br> <img src="data\cover_images\image_2.png" alt="Detective Profile" width="700" height="auto">
 
 
-# ⚙️ How It Works
-1. Chunking
-Raw docs are split into ~400-word chunks with metadata.
-2. Indexing
-- BM25 (Whoosh) for keyword search
-- FAISS for semantic search on embeddings (all-MiniLM-L6-v2)
-3. Retrieval
-- Fuse BM25 and FAISS scores
-- Heuristic boosts for code-rich and tutorial pages
-- Cross-encoder reranking (ms-marco-MiniLM-L-6-v2)
-4. Generation
-- Build an extraction-style prompt (asks for Python code only)
-- Invoke quantized LLaMA locally via llama.cpp
+## ⚙️ How It Works
+
+### 1. 🧩 Chunking
+- Raw documentation is split into ~400-word chunks.
+- Each chunk includes metadata for context-aware retrieval.
+
+### 2. 🗂️ Indexing
+- **BM25** (Whoosh) for keyword-based sparse search.
+- **FAISS** for semantic search using embeddings (`all-MiniLM-L6-v2`).
+
+### 3. 🔍 Retrieval
+- Combine BM25 and FAISS scores for hybrid relevance.
+- Apply heuristic boosts for code-rich and tutorial-heavy pages.
+- Use a cross-encoder reranker (`ms-marco-MiniLM-L-6-v2`) to refine top results.
+
+### 4. 🧠 Generation
+- Construct an extraction-style prompt focused on Python code output.
+- Invoke a quantized LLaMA model locally via `llama.cpp`.
+
 
 # 📄 Attribution
 - Hugging Face Transformers documentation (CC BY 4.0)
