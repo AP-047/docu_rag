@@ -9,23 +9,13 @@ A local, CPU-friendly Retrieval-Augmented Generation (RAG) system for Hugging Fa
 ```
 git clone https://github.com/AP-047/docu_rag.git
 ```
-```
-cd docu_rag
-```
 
-2. Create and activate a Python virtual environment
-```
-python -m venv venv
-source venv/bin/activate    # macOS/Linux
-venv\Scripts\activate       # Windows
-```
-
-3. Install dependencies
+2. Install dependencies
 ```
 pip install -r requirements.txt
 ```
 
-4. Build or download llama.cpp
+3. Build or download llama.cpp
 Build from source (CPU only):
 ```
 cd llama.cpp
@@ -38,7 +28,7 @@ Copy the resulting llama-cli.exe into a convenient folder.
 - Or download a Windows prebuilt binary from
 https://github.com/ggerganov/llama.cpp/releases
 
-5. Quantize a LLaMA model
+4. Quantize a LLaMA model
 ```
 cd llama.cpp
 ./main.exe --model ./weights/llama-7B/ggml-model.bin \
@@ -46,7 +36,7 @@ cd llama.cpp
            --quantize q4_0
 ```
 
-6. Update src/generator.py
+5. Update src/generator.py
 Set LLAMA_CPP_BIN to the path of your llama-cli.exe.
 
 🚀 Running the App
