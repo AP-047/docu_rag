@@ -28,7 +28,7 @@ Copy the resulting llama-cli.exe into a convenient folder.
 - Or download a Windows prebuilt binary from
 https://github.com/ggerganov/llama.cpp/releases
 
-- If you are using already downloaded one then just adjust the path at "LLAMA_CPP_BIN =" in generator.py
+- If you are using already downloaded one here in this repo then just adjust the path at "LLAMA_CPP_BIN =" in generator.py
 
 #### 4. Quantize a LLaMA model
 ```
