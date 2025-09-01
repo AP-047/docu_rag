@@ -40,7 +40,6 @@ cd llama.cpp
 Set LLAMA_CPP_BIN to the path of your llama-cli.exe.
 
 ## 🚀 Running the App
----
 
 In the project root:
 ```
@@ -65,20 +64,20 @@ and click Generate Answer.
 
 ## ⚙️ How It Works
 
-#### 1. 🧩 Chunking
+#### 1. Chunking
 - Raw documentation is split into ~400-word chunks.
 - Each chunk includes metadata for context-aware retrieval.
 
-#### 2. 🗂️ Indexing
+#### 2. Indexing
 - **BM25** (Whoosh) for keyword-based sparse search.
 - **FAISS** for semantic search using embeddings (`all-MiniLM-L6-v2`).
 
-#### 3. 🔍 Retrieval
+#### 3. Retrieval
 - Combine BM25 and FAISS scores for hybrid relevance.
 - Apply heuristic boosts for code-rich and tutorial-heavy pages.
 - Use a cross-encoder reranker (`ms-marco-MiniLM-L-6-v2`) to refine top results.
 
-#### 4. 🧠 Generation
+#### 4. Generation
 - Construct an extraction-style prompt focused on Python code output.
 - Invoke a quantized LLaMA model locally via `llama.cpp`.
 
