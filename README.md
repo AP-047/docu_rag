@@ -1,29 +1,21 @@
-# GenAI RAG — Transformers Documentation Assistant
+## GenAI RAG — Transformers Documentation Assistant
  
 A local, CPU-friendly Retrieval-Augmented Generation (RAG) system for Hugging Face Transformers documentation.
 <br> Combines BM25 sparse search, FAISS semantic search, and a cross-encoder reranker to retrieve relevant docs, then uses a quantized LLaMA model via llama.cpp to generate concise Python code examples.
 
-# ⚙️ Setup
+## ⚙️ Setup
 
-1. Clone the repo
+#### 1. Clone the repo
 ```
 git clone https://github.com/AP-047/docu_rag.git
-cd docu_rag
 ```
 
-2. Create and activate a Python virtual environment
-```
-python -m venv venv
-source venv/bin/activate    # macOS/Linux
-venv\Scripts\activate       # Windows
-```
-
-3. Install dependencies
+#### 2. Install dependencies
 ```
 pip install -r requirements.txt
 ```
 
-4. Build or download llama.cpp
+#### 3. Build or download llama.cpp
 Build from source (CPU only):
 ```
 cd llama.cpp
@@ -36,7 +28,7 @@ Copy the resulting llama-cli.exe into a convenient folder.
 - Or download a Windows prebuilt binary from
 https://github.com/ggerganov/llama.cpp/releases
 
-5. Quantize a LLaMA model
+#### 4. Quantize a LLaMA model
 ```
 cd llama.cpp
 ./main.exe --model ./weights/llama-7B/ggml-model.bin \
@@ -44,11 +36,10 @@ cd llama.cpp
            --quantize q4_0
 ```
 
-6. Update src/generator.py
+#### 5. Update src/generator.py
 Set LLAMA_CPP_BIN to the path of your llama-cli.exe.
 
-🚀 Running the App
----
+## 🚀 Running the App
 
 In the project root:
 ```
@@ -71,26 +62,32 @@ and click Generate Answer.
 <br> <img src="data\cover_images\image_2.png" alt="Detective Profile" width="700" height="auto">
 
 
-# ⚙️ How It Works
-1. Chunking
-Raw docs are split into ~400-word chunks with metadata.
-2. Indexing
-- BM25 (Whoosh) for keyword search
-- FAISS for semantic search on embeddings (all-MiniLM-L6-v2)
-3. Retrieval
-- Fuse BM25 and FAISS scores
-- Heuristic boosts for code-rich and tutorial pages
-- Cross-encoder reranking (ms-marco-MiniLM-L-6-v2)
-4. Generation
-- Build an extraction-style prompt (asks for Python code only)
-- Invoke quantized LLaMA locally via llama.cpp
+## ⚙️ How It Works
 
-# 📄 Attribution
+#### 1. Chunking
+- Raw documentation is split into ~400-word chunks.
+- Each chunk includes metadata for context-aware retrieval.
+
+#### 2. Indexing
+- **BM25** (Whoosh) for keyword-based sparse search.
+- **FAISS** for semantic search using embeddings (`all-MiniLM-L6-v2`).
+
+#### 3. Retrieval
+- Combine BM25 and FAISS scores for hybrid relevance.
+- Apply heuristic boosts for code-rich and tutorial-heavy pages.
+- Use a cross-encoder reranker (`ms-marco-MiniLM-L-6-v2`) to refine top results.
+
+#### 4. Generation
+- Construct an extraction-style prompt focused on Python code output.
+- Invoke a quantized LLaMA model locally via `llama.cpp`.
+
+
+## 📄 Attribution
 - Hugging Face Transformers documentation (CC BY 4.0)
 - Whoosh, FAISS, Sentence-Transformers, Cross-Encoder (MIT/Apache2)
 - llama.cpp by Georgi Gerganov (MIT)
 - Streamlit (Apache2)
 All components are open-source. No proprietary code included.
 
-# 🙏 Contributions & Issues
+## 🙏 Contributions & Issues
 Feel free to open issues or pull requests to improve retrieval heuristics, add GPU support, or extend to other documentation collections.
