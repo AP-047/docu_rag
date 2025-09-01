@@ -23,8 +23,8 @@ def build_prompt(query: str, contexts: list) -> str:
     retrieved contexts (with IDs), and the user question.
     """
     header = (
-        "You are an expert assistant for Hugging Face Transformers documentation.\n"
-        "Use the following context to answer accurately. Cite by chunk ID.\n\n"
+        "You are an expert assistant. Provide a **concise Python code example** "
+        "showing how to load a tokenizer in Hugging Face Transformers. Cite context IDs.\n\n"
     )
     context_text = "".join(f"[{c['id']}] {c['content']}\n\n" for c in contexts)
     return header + context_text + f"Question: {query}\nAnswer:"

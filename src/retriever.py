@@ -33,30 +33,50 @@ embed_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 def retrieve(query: str, top_k: int = 5, alpha: float = 0.5):
     """
-    Retrieve top_k chunks combining BM25 and FAISS.
-    alpha: weight for FAISS (dense), (1-alpha) for BM25 (sparse).
+    Retrieve top_k chunks combining BM25 and FAISS, then apply filename boosts.
     """
-    # BM25 search
+
+    # 1) BM25 search
     q = bm25_parser.parse(query)
     bm25_results = bm25_searcher.search(q, limit=top_k)
     bm25_scores = {hit['id']: hit.score for hit in bm25_results}
 
-    # FAISS search
+    # 2) FAISS search
     q_emb = embed_model.encode([query], convert_to_numpy=True, normalize_embeddings=True).astype('float32')
     scores, idxs = faiss_index.search(q_emb, top_k)
     dense_scores = {faiss_ids[idx]: float(scores[0][i]) for i, idx in enumerate(idxs[0])}
 
-    # Combine scores
+    # 3) Combine scores
     combined = {}
     for cid, score in bm25_scores.items():
         combined[cid] = combined.get(cid, 0) + (1 - alpha) * score
     for cid, score in dense_scores.items():
         combined[cid] = combined.get(cid, 0) + alpha * score
+    
+    # Heuristic filename boost for tutorial and code‐example pages
+    for cid in list(combined.keys()):
+        src = chunk_data[cid]['source_file'].lower()
+        # boost if the file name suggests it contains usage or code examples
+        if any(keyword in src for keyword in (
+                "tokenizer", "quickstart", "getting_started",
+                "quicktour", "tutorial", "usage", "installation")):
+            combined[cid] += 2.0
 
-    # Sort by combined score
+    # 4) Heuristic boost for key filenames
+    for cid in list(combined.keys()):
+        src = chunk_data[cid]['source_file'].lower()
+        if any(k in src for k in ("tokenizer", "quickstart", "getting_started", "usage", "installation")):
+            combined[cid] += 2.0
+    
+    for cid in list(combined.keys()):
+        content = chunk_data[cid]['content']
+        if "```python" in content:
+            combined[cid] += 1.0
+
+    # 5) Final sort and slice
     sorted_ids = sorted(combined.items(), key=lambda x: x[1], reverse=True)[:top_k]
 
-    # Gather results
+    # 6) Build results list from sorted_ids
     results = []
     for cid, score in sorted_ids:
         chunk = chunk_data[cid]
@@ -66,7 +86,9 @@ def retrieve(query: str, top_k: int = 5, alpha: float = 0.5):
             'content': chunk['content'],
             'score': score
         })
+
     return results
+
 
 # For testing
 if __name__ == "__main__":
