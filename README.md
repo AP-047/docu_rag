@@ -1,11 +1,9 @@
 # GenAI RAG — Transformers Documentation Assistant
- ---
  
 A local, CPU-friendly Retrieval-Augmented Generation (RAG) system for Hugging Face Transformers documentation.
 <br> Combines BM25 sparse search, FAISS semantic search, and a cross-encoder reranker to retrieve relevant docs, then uses a quantized LLaMA model via llama.cpp to generate concise Python code examples.
 
 # ⚙️ Setup
- ---
 
 1. Clone the repo
 ```
@@ -53,20 +51,42 @@ Set LLAMA_CPP_BIN to the path of your llama-cli.exe.
 ---
 
 In the project root:
+```
 streamlit run app.py
+```
 Open http://localhost:8501 in your browser.
+<br>
 Use the sidebar sliders to adjust:
+- Number of contexts (top_k)
+- Dense vs Sparse (α)
+- Temperature
+- Max tokens
 
-Number of contexts (top_k)
-
-Dense vs Sparse (α)
-
-Temperature
-
-Max tokens
-
-Type a question like:
-
-How do I load a tokenizer in Hugging Face Transformers?
+> **Type a question like:**  
+> *How do I load a tokenizer in Hugging Face Transformers?*
 
 and click Generate Answer.
+
+# ⚙️ How It Works
+1. Chunking
+Raw docs are split into ~400-word chunks with metadata.
+2. Indexing
+- BM25 (Whoosh) for keyword search
+- FAISS for semantic search on embeddings (all-MiniLM-L6-v2)
+3. Retrieval
+- Fuse BM25 and FAISS scores
+- Heuristic boosts for code-rich and tutorial pages
+- Cross-encoder reranking (ms-marco-MiniLM-L-6-v2)
+4. Generation
+- Build an extraction-style prompt (asks for Python code only)
+- Invoke quantized LLaMA locally via llama.cpp
+
+# 📄 Attribution
+- Hugging Face Transformers documentation (CC BY 4.0)
+- Whoosh, FAISS, Sentence-Transformers, Cross-Encoder (MIT/Apache2)
+- llama.cpp by Georgi Gerganov (MIT)
+- Streamlit (Apache2)
+All components are open-source. No proprietary code included.
+
+# 🙏 Contributions & Issues
+Feel free to open issues or pull requests to improve retrieval heuristics, add GPU support, or extend to other documentation collections.
