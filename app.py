@@ -7,10 +7,15 @@ st.title("📖 GenAI RAG — Transformers Documentation Assistant")
 
 with st.sidebar:
     st.header("Settings")
-    top_k = st.slider("Number of contexts (top_k)", 1, 10, 5)
-    alpha = st.slider("Dense vs Sparse (α)", 0.0, 1.0, 0.5)
-    temperature = st.slider("Temperature", 0.1, 1.0, 0.7)
-    max_tokens = st.number_input("Max tokens", 16, 512, 256)
+    # Increase contexts to 10 by default
+    top_k = st.slider("Number of contexts (top_k)", 1, 20, 10)
+    # Favor semantic retrieval more heavily
+    alpha = st.slider("Dense vs Sparse (α)", 0.0, 1.0, 0.8)
+    # Lower temperature for more focused answers
+    temperature = st.slider("Temperature", 0.0, 1.0, 0.5)
+    # Align max tokens with generator default
+    max_tokens = st.number_input("Max tokens", 16, 1024, 512)
+
 
 import src.generator as gen_mod
 gen_mod.TEMPERATURE = temperature
