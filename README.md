@@ -61,11 +61,15 @@ Use the sidebar sliders to adjust:
 - Dense vs Sparse (α)
 - Temperature
 - Max tokens
+<br> <img src="data\cover_images\image_1.png" alt="Detective Profile" width="700" height="auto">
+
 
 > **Type a question like:**  
 > *How do I load a tokenizer in Hugging Face Transformers?*
 
 and click Generate Answer.
+<br> <img src="data\cover_images\image_2.png" alt="Detective Profile" width="700" height="auto">
+
 
 # ⚙️ How It Works
 1. Chunking
