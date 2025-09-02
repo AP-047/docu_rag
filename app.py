@@ -37,7 +37,7 @@ if st.button("🔍 Search Documentation", key="search_button") and query:
                 st.markdown("**Content:**")
                 st.markdown(result['content'])
                 
-                # Add some styling
+                # Add styling
                 st.markdown("---")
     else:
         st.warning("No relevant documentation found. Try rephrasing your query.")
@@ -46,7 +46,6 @@ if st.button("🔍 Search Documentation", key="search_button") and query:
 st.markdown("---")
 st.markdown(
     """
-    **Tech Stack:** Whoosh (BM25), FAISS (Dense Search), Sentence-Transformers, Cross-Encoder Reranking, Streamlit  
-    **Features:** ✅ Fully offline • ✅ CPU-friendly • ✅ Hybrid retrieval • ✅ Real-time search
+    ✅ Fully offline • ✅ CPU-friendly • ✅ Hybrid retrieval • ✅ Real-time search
     """
 )
