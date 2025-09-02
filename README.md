@@ -34,7 +34,7 @@ Enter a query and click **Search Documentation.**
 <br> *How do I load a tokenizer in Hugging Face Transformers?*
 
 and click Generate Answer.
-<br> <img src="data\cover_images\image_1.png" alt="Detective Profile" width="700" height="auto">
+<br> <img src="data\cover_images\image_2.png" alt="Detective Profile" width="700" height="auto">
 
 
 ## ⚙️ How It Works
