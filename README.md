@@ -5,12 +5,12 @@ A **local**, **CPU-friendly** **semantic search** system for Hugging Face Transf
 
 ## ⚙️ Setup
 
-#### 1. Clone the repo
+### 1. Clone the repo
 ```
 git clone https://github.com/AP-047/docu_rag.git
 ```
 
-#### 2. Install dependencies
+### 2. Install dependencies
 ```
 pip install -r requirements.txt
 ```
@@ -40,18 +40,18 @@ and click Generate Answer.
 
 ## ⚙️ How It Works
 
-#### 1. Chunking
+### 1. Chunking
 - Splits each Markdown file into ~400-word passages with associated metadata.
 
-#### 2. Indexing
+### 2. Indexing
 - **BM25** (Whoosh) for keyword-based sparse search.
 - **FAISS** for semantic search using all-MiniLM-L6-v2 embeddings.
 
-#### 3. Retrieval & Reranking
+### 3. Retrieval & Reranking
 - Combine BM25 and FAISS scores via a hybrid α-weighted sum.
 - Applies a cross-encoder (ms-marco-MiniLM-L-6-v2) to rerank the top results.
 
-#### 4. Display
+### 4. Display
 - Shows each passage with its source path and relevance score.
 
 ## 📄 Attribution
