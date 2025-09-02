@@ -14,7 +14,6 @@ git clone https://github.com/AP-047/docu_rag.git
 ```
 pip install -r requirements.txt
 ```
-```
 
 ## 🚀 Running the App
 
