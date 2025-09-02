@@ -1,52 +1,76 @@
-import os
-import subprocess
+import streamlit as st
 from pathlib import Path
 from src.retriever import retrieve
 
-# Paths
+# Configuration
 ROOT = Path(__file__).parent.parent
-LLAMA_MODEL_PATH = ROOT / "models" / "llama_quant" / "llama-7B-quant.bin"
-LLAMA_CPP_BIN = r"C:\AP_nxt\projects\llama-b6347-bin-win-cpu-x64\llama-cli.exe"
 
-# Defaults (overridden by UI)
-TEMPERATURE = 0.7
-TOP_P = 0.9
-MAX_TOKENS = 256
-
-def build_prompt(query: str, contexts: list) -> str:
+def format_search_results(contexts: list) -> list:
     """
-    Construct an extraction‐style prompt that asks for a concise
-    Python code snippet, citing context IDs.
+    Format retrieved contexts for display in Streamlit UI.
+    
+    Args:
+        contexts: List of context dictionaries from retriever
+        
+    Returns:
+        List of formatted result dictionaries
     """
-    header = (
-        "You are a code assistant. Given the following documentation contexts, "
-        "extract and return *only* the **Python code snippet** that answers the question. "
-        "If no code snippet exists in context, respond “No example found.” "
-        "Cite each code block with its context ID.\n\n"
-    )
-    context_text = ""
+    results = []
+    
     for ctx in contexts:
-        # Escape backticks and preserve fences
-        content = ctx["content"].replace("```", "\\`\\`\\`")
-        context_text += f"[{ctx['id']}] ``````\n\n"
-    return header + context_text + f"Question: {query}\n\nAnswer (code only):"
+        result = {
+            'source': ctx.get('id', 'Unknown source'),
+            'content': ctx.get('content', ''),
+            'score': ctx.get('score', 0.0)
+        }
+        results.append(result)
+    
+    return results
 
-def generate_answer(query: str, top_k: int = 5, alpha: float = 0.7) -> str:
+def search_documents(query: str, top_k: int = 10, alpha: float = 0.7) -> list:
     """
-    Retrieve contexts, build the extraction prompt, and invoke llama-cli
-    to generate the code answer.
+    Search Transformers documentation using hybrid retrieval.
+    
+    Args:
+        query: User's search query
+        top_k: Number of results to return
+        alpha: Balance between dense (1.0) and sparse (0.0) search
+        
+    Returns:
+        List of formatted search results
     """
-    contexts = retrieve(query, top_k=top_k, alpha=alpha)
-    prompt = build_prompt(query, contexts)
+    try:
+        # Retrieve relevant contexts using the hybrid approach
+        contexts = retrieve(query, top_k=top_k, alpha=alpha)
+        
+        # Format results for display
+        results = format_search_results(contexts)
+        
+        # Display search info in sidebar
+        st.sidebar.success(f"Retrieved {len(results)} results")
+        st.sidebar.info(f"Search mode: {'Dense-focused' if alpha > 0.7 else 'Balanced' if alpha > 0.3 else 'Sparse-focused'}")
+        
+        return results
+        
+    except Exception as e:
+        st.sidebar.error(f"Search error: {str(e)}")
+        return []
 
-    cmd = [
-        LLAMA_CPP_BIN,
-        "--model", str(LLAMA_MODEL_PATH),
-        "--prompt", prompt,
-        "--n_predict", str(MAX_TOKENS),
-        "--temp", str(TEMPERATURE),
-        "--top_p", str(TOP_P),
-        "--threads", str(os.cpu_count()),
-    ]
-    proc = subprocess.run(cmd, capture_output=True, text=True)
-    return proc.stdout.strip()
+def get_search_summary(query: str, results: list) -> str:
+    """
+    Generate a brief summary of search results.
+    
+    Args:
+        query: Original search query
+        results: List of search results
+        
+    Returns:
+        Summary string
+    """
+    if not results:
+        return f"No documentation found for: '{query}'"
+    
+    # Extract key topics from top results
+    top_content = " ".join([r['content'][:200] for r in results[:3]])
+    
+    return f"Found {len(results)} relevant sections about '{query}' in Transformers documentation."
