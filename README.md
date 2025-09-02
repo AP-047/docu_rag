@@ -28,10 +28,10 @@ Use the sidebar sliders to adjust:
 - Dense vs Sparse balance (α)
 <br> <img src="data\cover_images\image_1.png" alt="Detective Profile" width="700" height="auto">
 
-> Enter a query and click **Search Documentation.**  
-> *How do I perform text classification using Transformers?*
-> *How do I load a tokenizer in Transformers?*
-> *How do I load a tokenizer in Hugging Face Transformers?*
+Enter a query and click **Search Documentation.**  
+<br> *How do I perform text classification using Transformers?*
+<br> *How do I load a tokenizer in Transformers?*
+<br> *How do I load a tokenizer in Hugging Face Transformers?*
 
 and click Generate Answer.
 <br> <img src="data\cover_images\image_2.png" alt="Detective Profile" width="700" height="auto">
