@@ -6,13 +6,12 @@ from src.retriever import retrieve
 # Paths
 ROOT = Path(__file__).parent.parent
 LLAMA_MODEL_PATH = ROOT / "models" / "llama_quant" / "llama-7B-quant.bin"
-LLAMA_CPP_BIN = r"C:/AP_nxt/projects/docu_rag/llama-b6347-bin-win-cpu-x64/llama-cli.exe"
-# LLAMA_CPP_BIN = r"C:\AP_nxt\projects\docu_rag\llama-b6347-bin-win-cpu-x64\llama-cli.exe"
+LLAMA_CPP_BIN = r"C:\AP_nxt\projects\llama-b6347-bin-win-cpu-x64\llama-cli.exe"
 
 # Defaults (overridden by UI)
-TEMPERATURE = 0.5
+TEMPERATURE = 0.7
 TOP_P = 0.9
-MAX_TOKENS = 512
+MAX_TOKENS = 256
 
 def build_prompt(query: str, contexts: list) -> str:
     """
