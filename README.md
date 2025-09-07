@@ -57,7 +57,7 @@ and click Generate Answer.
 
 ## 🌐 Live Demo
 
-**Try it now:** [https://transformers-doc-assistant.streamlit.app/](https://transformers-doc-assistant.streamlit.app/)
+**Try it now:** [https://transformers-doc-assistant.streamlit.app/](https://transformers-doc-assistant.streamlit.app)
 <br> No installation required! Test the semantic search capabilities directly in your browser.
 
 ## 📄 Attribution
