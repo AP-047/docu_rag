@@ -3,6 +3,8 @@
 A **local**, **CPU-friendly** **semantic search** system for Hugging Face Transformers documentation.
 <br> Combines BM25 sparse search, FAISS embeddings, and a cross-encoder reranker to retrieve and display the most relevant documentation—**fully offline** and **without external dependencies**.
 
+✅ Fully offline • ✅ 0% Hallucination • ✅ CPU-friendly • ✅ Hybrid retrieval • ✅ Real-time search
+
 ## ⚙️ Setup
 
 ### 1. Clone the repo
