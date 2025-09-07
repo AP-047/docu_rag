@@ -2,7 +2,7 @@ import streamlit as st
 from src.generator import search_documents
 
 st.set_page_config(
-    page_title="Retrieval-Augmented Search — Transformers Documentation Assistant",
+    page_title="Transformers Documentation Assistant",
     page_icon="📚",
     layout="wide"
 )
@@ -13,7 +13,8 @@ top_k = st.sidebar.slider("Number of contexts to retrieve", 1, 15, 10, key="top_
 alpha = st.sidebar.slider("Dense vs Sparse balance (α)", 0.0, 1.0, 0.7, 
                          help="0.0 = pure BM25, 1.0 = pure FAISS", key="alpha")
 
-st.title("📚 Retrieval-Augmented Search — Transformers Documentation Assistant")
+st.title("📚 Transformers Documentation Assistant")
+st.subheader("Retrieval-Augmented Search")
 st.markdown("*Semantic search over Hugging Face Transformers documentation using BM25 + FAISS + Cross-Encoder reranking*")
 
 # Main query input
