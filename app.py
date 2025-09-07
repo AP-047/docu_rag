@@ -48,10 +48,10 @@ st.markdown(
     <div style="color:gray; font-size:0.9rem; margin-top:0.5rem; font-weight:300;">
       You Can Ask:
       <ul style="margin-top:0.25rem; padding-left:1.2rem; line-height:1.4;">
-        <li>How do I install Hugging Face Transformers?</li>
-        <li>What are the core components of the Transformers library?</li>
-        <li>How do I load a pre-trained model?</li>
         <li>How do I load a tokenizer?</li>
+        <li>How do I perform text classification using Transformers?</li>
+        <li>How do I use a model for question answering?</li>
+        <li>How do I fine-tune a pre-trained model on my dataset?</li>
       </ul>
     </div>
     """,
