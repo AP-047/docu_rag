@@ -42,10 +42,10 @@ if st.button("🔍 Search Documentation", key="search_button") and query:
     else:
         st.warning("No relevant documentation found. Try rephrasing your query.")
 
-# Footer
-st.markdown("---")
-st.markdown(
-    """
-    ✅ Fully offline • ✅ 0% Hallucination • ✅ CPU-friendly • ✅ Hybrid retrieval • ✅ Real-time search
-    """
-)
+# # Footer
+# st.markdown("---")
+# st.markdown(
+#     """
+#     ✅ Fully offline • ✅ 0% Hallucination • ✅ CPU-friendly • ✅ Hybrid retrieval • ✅ Real-time search
+#     """
+# )
