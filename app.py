@@ -32,12 +32,17 @@ if st.button("🔍 Search Documentation", key="search_button") and query:
         
         # Display results
         for i, result in enumerate(results, 1):
-            with st.expander(f"📄 Result {i}: {result['source']}", expanded=(i <= 3)):
+            # Build GitHub URL for the source file
+            raw = result['source']
+            file_path = raw.rsplit("_", 1)[0].replace("\\", "/")
+            gh_url = f"https://github.com/huggingface/transformers/blob/main/docs/{file_path}"
+
+            # Use a Markdown link in the expander title
+            title = f"📄 Result {i}: [{file_path}]({gh_url})"
+            with st.expander(title, expanded=(i <= 3)):
                 st.markdown("**Relevance Score:** {:.4f}".format(result.get('score', 0.0)))
                 st.markdown("**Content:**")
                 st.markdown(result['content'])
-                
-                # Add styling
                 st.markdown("---")
     else:
         st.warning("No relevant documentation found. Try rephrasing your query.")
