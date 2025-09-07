@@ -58,7 +58,7 @@ and click Generate Answer.
 ## 🌐 Live Demo
 
 **Try it now:** [https://transformers-doc-assistant.streamlit.app/](https://transformers-doc-assistant.streamlit.app/)
-No installation required! Test the semantic search capabilities directly in your browser.
+<br> No installation required! Test the semantic search capabilities directly in your browser.
 
 ## 📄 Attribution
 - Hugging Face Transformers documentation (CC BY 4.0)
