@@ -46,6 +46,5 @@ if st.button("🔍 Search Documentation", key="search_button") and query:
 st.markdown("---")
 st.markdown(
     """
-    ✅ Fully offline • ✅ CPU-friendly • ✅ Hybrid retrieval • ✅ Real-time search
+    ✅ Fully offline • ✅ 0% Hallucination • ✅ CPU-friendly • ✅ Hybrid retrieval • ✅ Real-time search
     """
-)
