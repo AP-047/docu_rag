@@ -55,6 +55,11 @@ and click Generate Answer.
 ### 4. Display
 - Shows each passage with its source path and relevance score.
 
+## 🌐 Live Demo
+
+**Try it now:** [https://transformers-doc-assistant.streamlit.app/](https://transformers-doc-assistant.streamlit.app/)
+No installation required! Test the semantic search capabilities directly in your browser.
+
 ## 📄 Attribution
 - Hugging Face Transformers documentation (CC BY 4.0)
 - Whoosh, FAISS, Sentence-Transformers, Cross-Encoder (MIT/Apache2)
