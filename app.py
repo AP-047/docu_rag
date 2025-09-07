@@ -48,3 +48,4 @@ st.markdown(
     """
     ✅ Fully offline • ✅ 0% Hallucination • ✅ CPU-friendly • ✅ Hybrid retrieval • ✅ Real-time search
     """
+)
