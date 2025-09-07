@@ -30,22 +30,23 @@ if st.button("🔍 Search Documentation", key="search_button") and query:
     if results:
         st.success(f"Found {len(results)} relevant documentation sections")
         
-        # Display results
         for i, result in enumerate(results, 1):
-            # Build GitHub URL for the source file
+            # Build GitHub URL
             raw = result['source']
             file_path = raw.rsplit("_", 1)[0].replace("\\", "/")
             gh_url = f"https://github.com/huggingface/transformers/blob/main/docs/{file_path}"
 
-            # Use a Markdown link in the expander title
-            title = f"📄 Result {i}: [{file_path}]({gh_url})"
-            with st.expander(title, expanded=(i <= 3)):
+            # Use a simple title so link clicks inside the body don't toggle
+            with st.expander(f"📄 Result {i}", expanded=(i <= 3)):
+                # Render the clickable link inside the expander
+                st.markdown(f"[{file_path}]({gh_url}){{:target=\"_blank\"}}", unsafe_allow_html=True)
                 st.markdown("**Relevance Score:** {:.4f}".format(result.get('score', 0.0)))
                 st.markdown("**Content:**")
                 st.markdown(result['content'])
                 st.markdown("---")
     else:
         st.warning("No relevant documentation found. Try rephrasing your query.")
+
 
 # Sample questions
 st.markdown(
