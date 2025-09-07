@@ -15,7 +15,7 @@ alpha = st.sidebar.slider("Dense vs Sparse balance (α)", 0.0, 1.0, 0.7,
 
 st.title("📚 Transformers Documentation Assistant")
 st.subheader("Retrieval-Augmented Search")
-st.markdown("*Semantic search over Hugging Face Transformers documentation using BM25 + FAISS + Cross-Encoder reranking*")
+st.markdown("*(Semantic search over Hugging Face Transformers documentation using BM25 + FAISS + Cross-Encoder reranking)*")
 
 # Main query input
 query = st.text_input(
