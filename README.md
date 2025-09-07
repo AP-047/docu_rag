@@ -1,4 +1,4 @@
-## GenAI RAG — Transformers Documentation Assistant
+## Retrieval-Augmented Search — Transformers Documentation Assistant
  
 A **local**, **CPU-friendly** **semantic search** system for Hugging Face Transformers documentation.
 <br> Combines BM25 sparse search, FAISS embeddings, and a cross-encoder reranker to retrieve and display the most relevant documentation—**fully offline** and **without external dependencies**.
